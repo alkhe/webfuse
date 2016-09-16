@@ -18,7 +18,7 @@ static FILE* DEBUG_FD;
 
 static int wf_getattr(const char* path, struct stat *st) {
 
-	DEBUGF("stat %s\n", path);
+	// DEBUGF("stat %s\n", path);
 
 	if (STR_EQ(path, "/")) {
 		st->st_mode = S_IFDIR | 0755;
@@ -40,17 +40,18 @@ static int wf_getattr(const char* path, struct stat *st) {
 		return -ENOENT;
 	}
 
-
+	// DEBUGF()
 	st->st_mode = S_IFREG | 0444;
 	st->st_nlink = 1;
 	st->st_size = 0;
+	// st->st_dev = 
 	return 0;
 }
 
 static int wf_readdir(const char* path, void* buf, fuse_fill_dir_t fill,
 	off_t offset, struct fuse_file_info* info) {
 	
-	DEBUGF("ls %s\n", path);
+	// DEBUGF("ls %s\n", path);
 
 	fill(buf, ".", NULL, 0);
 	fill(buf, "..", NULL, 0);
@@ -61,7 +62,7 @@ static int wf_readdir(const char* path, void* buf, fuse_fill_dir_t fill,
 
 static int wf_open(const char* path, struct fuse_file_info* info) {
 
-	DEBUGF("open %s\n", path);
+	// DEBUGF("open %s\n", path);
 
 	return 0;
 }
@@ -69,7 +70,7 @@ static int wf_open(const char* path, struct fuse_file_info* info) {
 static int wf_read(const char* path, char* buf, size_t size, off_t offset,
 	struct fuse_file_info* info) {
 	
-	DEBUGF("read %s\n", path);
+	// DEBUGF("read %s\n", path);
 
 	struct entry query;
 	query.key = (char*)(path);
@@ -88,11 +89,11 @@ static int wf_read(const char* path, char* buf, size_t size, off_t offset,
 
 	memcpy(buf, document + offset, bytes_copyable);
 
-	DEBUGF("total %zu b\n", bytes_available);	
-	DEBUGF("copied %zu b\n", bytes_copyable);
-	DEBUGF("size %zu b\n", size);
-	DEBUGF("offset %zu b\n", offset);
-	// DEBUG(document);
+	// DEBUGF("total %zu b\n", bytes_available);	
+	// DEBUGF("copied %zu b\n", bytes_copyable);
+	// DEBUGF("size %zu b\n", size);
+	// DEBUGF("offset %zu b\n", offset);
+	DEBUG(document);
 
 	return bytes_copyable;
 }
@@ -157,7 +158,7 @@ static const int HASH_ENTRIES = 128;
 
 int main(int argc, char** argv) {
 	DEBUG_FD = fopen("debug.log", "w");
-	DEBUG("init\n");
+	// DEBUG("init\n");
 
 	int create_result = hcreate(HASH_ENTRIES);
 	if (create_result == 0) {
