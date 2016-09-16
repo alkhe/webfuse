@@ -1,4 +1,13 @@
-all: compile
+all: ensure_mount compile
+
+exec: kill refresh
+
+refresh: compile run
+
+dir = webfs
+
+ensure_mount:
+	[ -d $(dir) ] || mkdir $(dir)
 
 compile:
 	clang `pkg-config --cflags --libs fuse` webfuse.c get.c die.c -owebfuse
